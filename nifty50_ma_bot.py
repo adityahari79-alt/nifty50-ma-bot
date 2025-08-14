@@ -6,6 +6,11 @@ import streamlit as st
 import pandas as pd
 import time
 import dhanhq 
+
+import importlib.metadata
+version = importlib.metadata.version('dhanhq')
+print(version)
+
 print(dhanhq.__version__)
 
 # ===== Streamlit Page Config =====
@@ -166,6 +171,7 @@ if run_bot:
             else:
                 status_box.warning("MA condition not met. Waiting...")
                 time.sleep(30)
+
 
 
 
