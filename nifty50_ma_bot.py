@@ -7,6 +7,19 @@ from datetime import datetime, timedelta
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from dhanhq import dhanhq
 
+import subprocess
+
+
+def get_dhanhq_version():
+    result = subprocess.run(['pip', 'show', 'dhanhq'], capture_output=True, text=True)
+    if result.returncode == 0 and result.stdout:
+        for line in result.stdout.splitlines():
+            if line.startswith("Version:"):
+                return line.split(":", 1)[1].strip()
+    return "dhanhq not installed"
+
+st.write("DhanHQ package version:", get_dhanhq_version())
+
 # ===== Persistent State File =====
 STATE_FILE = "bot_state.json"
 
@@ -243,3 +256,4 @@ if start_bot:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(run_ws_loop(dhan))
+
