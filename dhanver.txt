@@ -1,0 +1,12 @@
+import subprocess
+import streamlit as st
+
+def get_dhanhq_version():
+    result = subprocess.run(['pip', 'show', 'dhanhq'], capture_output=True, text=True)
+    if result.returncode == 0 and result.stdout:
+        for line in result.stdout.splitlines():
+            if line.startswith("Version:"):
+                return line.split(":", 1)[1].strip()
+    return "dhanhq not installed"
+
+st.write("DhanHQ package version:", get_dhanhq_version())
