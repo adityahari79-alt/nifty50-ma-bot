@@ -5,7 +5,7 @@
 import streamlit as st
 import pandas as pd
 import time
-from dhanhq import DhanContext, dhanhq  
+from dhanhq 
 print(dhanhq.__version__)
 
 # ===== Streamlit Page Config =====
@@ -166,5 +166,6 @@ if run_bot:
             else:
                 status_box.warning("MA condition not met. Waiting...")
                 time.sleep(30)
+
 
 
