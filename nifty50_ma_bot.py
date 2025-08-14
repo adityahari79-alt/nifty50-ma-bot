@@ -5,13 +5,7 @@
 import streamlit as st
 import pandas as pd
 import time
-import dhanhq 
-
-import importlib.metadata
-version = importlib.metadata.version('dhanhq')
-print(version)
-
-# print(dhanhq.__version__)
+from dhanhq import dhanhq  # ✅ Only import dhanhq
 
 # ===== Streamlit Page Config =====
 st.set_page_config(page_title="Nifty50 MA Options Bot", layout="wide")
@@ -40,7 +34,7 @@ def fetch_5min_candles(dhan, sec_id):
     """ Fetch latest intraday data for Nifty 5-min candles """
     data = dhan.intraday_minute_data(
         security_id=sec_id,
-        exchange_segment=dhan.NSE,
+        exchange_segment="NSE",
         instrument_type="IDX_I"
     )
     df = pd.DataFrame(data)
@@ -65,8 +59,8 @@ if run_bot:
         st.error("Please fill all API & config fields before starting.")
     else:
         try:
-            dhan_context = DhanContext(client_id, access_token)  # ✅ Correct connection
-            dhan = dhanhq(dhan_context)
+            # ✅ Correct DhanHQ connection
+            dhan = dhanhq(client_id, access_token)
             status_box.info("✅ Connected to Dhan API. Starting strategy loop...")
         except Exception as e:
             st.error(f"❌ Failed to connect to Dhan API: {e}")
@@ -114,11 +108,11 @@ if run_bot:
                 try:
                     order = dhan.place_order(
                         security_id=option_id,
-                        exchange_segment=dhan.NSE_FNO,
-                        transaction_type=dhan.BUY,
+                        exchange_segment="NSE_FNO",
+                        transaction_type="BUY",
                         quantity=lot_size,
-                        order_type=dhan.MARKET,
-                        product_type=dhan.INTRA,
+                        order_type="MARKET",
+                        product_type="INTRA",
                         price=0
                     )
                     entry_price = float(order['order_legs'][0]['traded_price'])
@@ -134,7 +128,7 @@ if run_bot:
 
                 while True:
                     try:
-                        ltp_data = dhan.security_quote(dhan.NSE_FNO, option_id)
+                        ltp_data = dhan.security_quote("NSE_FNO", option_id)
                         ltp = float(ltp_data['last_price'])
                     except Exception as e:
                         status_box.error(f"Error fetching LTP: {e}")
@@ -151,11 +145,11 @@ if run_bot:
                         try:
                             exit_order = dhan.place_order(
                                 security_id=option_id,
-                                exchange_segment=dhan.NSE_FNO,
-                                transaction_type=dhan.SELL,
+                                exchange_segment="NSE_FNO",
+                                transaction_type="SELL",
                                 quantity=lot_size,
-                                order_type=dhan.MARKET,
-                                product_type=dhan.INTRA,
+                                order_type="MARKET",
+                                product_type="INTRA",
                                 price=0
                             )
                             exit_price = float(exit_order['order_legs'][0]['traded_price'])
@@ -171,9 +165,3 @@ if run_bot:
             else:
                 status_box.warning("MA condition not met. Waiting...")
                 time.sleep(30)
-
-
-
-
-
-
