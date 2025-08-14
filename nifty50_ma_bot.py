@@ -6,6 +6,7 @@ import streamlit as st
 import pandas as pd
 import time
 from dhanhq import DhanContext, dhanhq  
+print(dhanhq.__version__)
 
 # ===== Streamlit Page Config =====
 st.set_page_config(page_title="Nifty50 MA Options Bot", layout="wide")
@@ -165,4 +166,5 @@ if run_bot:
             else:
                 status_box.warning("MA condition not met. Waiting...")
                 time.sleep(30)
+
 
